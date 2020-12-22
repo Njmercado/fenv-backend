@@ -11,7 +11,7 @@ connect(
   password=env("MONGODB_PASSWORD"),
   authentication_source="p64b",
   host=env("MONGODB_DATABASE"),
-  port=5000
+  port=27017
 )
 
 class AvailableIPs(EmbeddedDocument):
