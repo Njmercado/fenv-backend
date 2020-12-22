@@ -7,9 +7,9 @@ env.read_env()
 
 connect(
   db=env("MONGODB_DATABASE"),
-  username=env("MONGODB_USERNAME"),
-  password=env("MONGODB_PASSWORD"),
-  authentication_source="p64b",
+  username=env("MONGODB_ROOT_USERNAME"),
+  password=env("MONGODB_ROOT_PASSWORD"),
+  authentication_source="admin",
   host=env("MONGODB_DATABASE"),
   port=27017
 )
