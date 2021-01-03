@@ -1,7 +1,8 @@
 from environs import Env
-from mongoengine import connect, Document, UUIDField, StringField, StringField, EmailField, DateTimeField, EmbeddedDocumentListField
+from mongoengine import connect, Document, UUIDField, StringField, StringField, EmailField, DateTimeField, EmbeddedDocumentListField 
 import datetime, uuid
 from models.enterprise_model import EnterpriseModel
+from models.records_model import RecordModel
 
 env = Env()
 env.read_env()
@@ -21,6 +22,7 @@ class UserModel(Document):
   password = StringField(editable=True, max_length=256, required=True)
   email = EmailField(required=True)
   enterprises = EmbeddedDocumentListField(EnterpriseModel)
+  records = EmbeddedDocumentListField(RecordModel)
   created_at = DateTimeField(default=datetime.datetime.now())
 
   def save(self, *args, **kwargs):
