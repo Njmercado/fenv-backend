@@ -1,5 +1,6 @@
 from models.user_model import UserModel
 from utils.crypto_utils import Cipher
+from utils.password import verifyPassword
 from environs import Env
 import base64
 
@@ -28,11 +29,18 @@ def __decipherData(data):
 
 def __userExists(user_email):
   response = UserModel.objects(email=user_email)
+  print(response, flush=True)
   return True if bool(len(response)) else False
 
 def create_user(params):
+  
+  is_valid_password = not verifyPassword(params.password)
 
-  print(params.email)
+  if is_valid_password:
+    return {
+      "message": "Wrong password, please enter a valid one",
+      "error": False
+    }
 
   if not __userExists(params.email):
     ciphered_password = __cipherData(params.password)
@@ -44,7 +52,7 @@ def create_user(params):
     user_model.save()
   else:
     return {
-      "message": "This user already exist, plis try to recover your password",
+      "message": "This user already exist, plis try to recover your password if you dont remember it",
       "error": False
     }
   return {
