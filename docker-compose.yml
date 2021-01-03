@@ -22,7 +22,7 @@ services:
       - MONGO_USERNAME=${MONGODB_USERNAME}
       - MONGO_PASSWORD=${MONGODB_PASSWORD}
     ports: 
-      - "27017:27017"
+      - ${MONGODB_PORT}:${MONGODB_PORT}
     volumes: 
       - ./config/init_database.sh:/docker-entrypoint-initdb.d/init_database.sh
       - mongodb:/data/db
