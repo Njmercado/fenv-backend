@@ -4,3 +4,4 @@ environs==8.0.0
 passlib==1.7.2
 typing_extensions==3.7.4.3
 pycrypto==2.6.1
+python-jose[cryptography]
