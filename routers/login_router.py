@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from schemas.login_schema import LoginSchema
-from utils.jwt_utils import generateJWT
+from utils.jwt_utils import generateJWT, verifyJWT
 from utils.queries.user_consumer import verifyUser
 
 router = APIRouter()
@@ -12,7 +12,7 @@ router = APIRouter()
 #   "email": "string@gmail.com"
 # }
 
-@router.post("/")
+@router.post("/token")
 def login(login_schema: LoginSchema):
   login_schema_as_object = { "email": login_schema.email, "password": login_schema.password }
   try:

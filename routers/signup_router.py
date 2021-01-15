@@ -10,7 +10,7 @@ def signup(signup_data: SignupSchema):
 
   try:
     
-    response = user_consumer.create_user(signup_data)
+    response = user_consumer.createUser(signup_data)
 
     return {
       "message": response["message"],
