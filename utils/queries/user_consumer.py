@@ -27,12 +27,19 @@ def __decipherData(data):
   data_without_buffer = cipher.dataWithoutBuffer(decrypted_data)
   return data_without_buffer
 
-def __userExists(user_email):
+def verifyUser(user):
+  response = UserModel.objects(email=user["email"]).first()
+
+  if not response: return False
+
+  deciphered_password = __decipherData(response["password"])
+  return user["password"] == deciphered_password
+
+def userExists(user_email):
   response = UserModel.objects(email=user_email)
-  print(response, flush=True)
   return True if bool(len(response)) else False
 
-def create_user(params):
+def createUser(params):
   
   is_valid_password = not verifyPassword(params.password)
 
@@ -42,7 +49,7 @@ def create_user(params):
       "error": False
     }
 
-  if not __userExists(params.email):
+  if not userExists(params.email):
     ciphered_password = __cipherData(params.password)
     user_model = UserModel(
       name=params.name,
