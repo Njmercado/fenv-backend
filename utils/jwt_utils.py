@@ -2,7 +2,7 @@ from jose import JWTError, jwt
 from environs import Env
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+# from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from utils.queries.user_consumer import verifyUser
 
 env = Env()
@@ -25,7 +25,7 @@ def verifyJWT(token: str):
   try:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[HASH_ALGORITHM])
     if verifyUser(payload):
-      return { "message": "Success", "error": False }
+      return { "message": "Success", "error": False, "data": payload }
     else:
       return {"message": "Some error has happend, are you trying to fuck me?", "error": True}
   except Exception as error:
