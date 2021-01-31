@@ -35,6 +35,10 @@ def verifyUser(user):
   deciphered_password = __decipherData(response["password"])
   return user["password"] == deciphered_password
 
+def getUser(user_email):
+  user = UserModel.objects(email = user_email).first()
+  return user
+
 def userExists(user_email):
   response = UserModel.objects(email=user_email)
   return True if bool(len(response)) else False
