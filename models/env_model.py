@@ -24,7 +24,7 @@ class KeyModel(EmbeddedDocument):
   value = StringField(editable=True, max_length=256, required=True)
   created_at = DateTimeField(default=datetime.datetime.now())
 
-class EnvModel(EmbeddedDocument):
+class EnvModel(Document):
   id = UUIDField(default=uuid.uuid4(), primary_key=True, editable=False)
   name = StringField(editable=True, max_length=100, required=True)
   available_ips = EmbeddedDocumentListField(AvailableIPs)

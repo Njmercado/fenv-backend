@@ -1,6 +1,5 @@
 from environs import Env
-from mongoengine import connect, EmbeddedDocument, UUIDField, StringField, EmailField, DateTimeField, EmbeddedDocumentListField
-from models.project_model import ProjectModel
+from mongoengine import connect, Document, UUIDField, StringField, EmailField, DateTimeField, ListField
 import datetime, uuid
 
 env = Env()
@@ -15,8 +14,8 @@ connect(
   port=27017
 )
 
-class EnterpriseModel(EmbeddedDocument):
+class EnterpriseModel(Document):
   id = UUIDField(default=uuid.uuid4(), primary_key=True, editable=False)
   name = StringField(editable=True, max_length=100, required=True)
-  projects = EmbeddedDocumentListField(ProjectModel)
+  projects = ListField(UUIDField(editable=False))
   created_at = DateTimeField(default=datetime.datetime.now())
