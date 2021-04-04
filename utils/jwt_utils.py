@@ -12,14 +12,15 @@ SECRET_KEY = env("SECRET_KEY")
 HASH_ALGORITHM = "HS256"
 
 def generateJWT(jwt_data, alive_days=8):
-  day_of_expiration = datetime.utcnow() + timedelta(days=alive_days)
-  jwt_data_copy = jwt_data.copy()
-  jwt_data_copy.update({ "exp": day_of_expiration })
-  encoded_jwt = jwt.encode(jwt_data_copy, SECRET_KEY, algorithm=HASH_ALGORITHM)
-  return {
-    "message": encoded_jwt,
-    "error": False
-  }
+  try:
+    day_of_expiration = datetime.utcnow() + timedelta(days=alive_days)
+    jwt_data_copy = jwt_data.copy()
+    jwt_data_copy.update({ "exp": day_of_expiration })
+    encoded_jwt = jwt.encode(jwt_data_copy, SECRET_KEY, algorithm=HASH_ALGORITHM)
+    return { "message": None, "error": False, "data": { "jwt": encoded_jwt }}
+  except Exception as error:
+    print(f"Some error has happend generating the jwt at jwt_utils.py. error: {error}")
+    return {"message": f"Some error has happend, error: {error}", "error": True, "data": None}
 
 def verifyJWT(token: str):
   try:
