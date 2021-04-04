@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from dependencies.jwt_dependencies import jwtAccess
-from utils.queries.enterprise_consumer import createEnterprise, getEnterprise, getEnterprises
+from utils.queries.enterprise_consumer import createEnterprise, getEnterprise, getEnterprises, deleteEnterprise
 import uuid
 
 router = APIRouter()
@@ -41,6 +41,19 @@ def getEnterprisesEndpoint(jwt_response: dict = Depends(jwtAccess)):
   try:
     email = jwt_response["data"]["email"]
     response = getEnterprises(email)
+    return response
+  except Exception as error:
+    return {
+      "message": f"Some error has happend: {error}",
+      "error": True
+    }
+
+@router.delete("/")
+def deleteEnterpriseEndpoint(enterprise_id: str, jwt_response: dict = Depends(jwtAccess)):
+  try:
+    enterprise_id = uuid.UUID(enterprise_id)
+    email = jwt_response["data"]["email"]
+    response = deleteEnterprise(user_email=email, enterprise_id=enterprise_id)
     return response
   except Exception as error:
     return {

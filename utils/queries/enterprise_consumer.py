@@ -72,3 +72,21 @@ def getEnterprises(user_email):
     return {"message": list(enterprises), "error": False}
   except Exception as error:
     return {"message": f"Some error has happend: {error}", "error": True} 
+
+def deleteEnterprise(user_email, enterprise_id):
+  try:
+    user = getUser(user_email)
+    enterprises_ids = user.enterprises
+
+    if(enterprise_id in enterprises_ids):
+      enterprise = EnterpriseModel.objects.filter(id = enterprise_id).delete()
+      enterprise.save()
+
+      user.enterprises.remove(enterprise_id)
+      user.save()
+
+      return {"message": "Enterprise deleted correctly", "error": False, "data": None}
+    return {"message": "Given enterprise id does not exist", "error": True, "data": None}
+  except Exception as error:
+    print(f"Some error has happend deleting some enterprise at enterprise_consumer.py. error: {error}")
+    return {"message": f"Some error has happend: {error}", "error": True, "data": None}
