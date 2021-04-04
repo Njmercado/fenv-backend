@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from dependencies.jwt_dependencies import jwtAccess
-from utils.queries.project_consumer import createProject, getProject, getProjects
+from utils.queries.project_consumer import createProject, getProject, getProjects, deleteProject
 import uuid
 
 router = APIRouter()
@@ -40,3 +40,14 @@ def getOneProject(enterprise_id: str, project_id: str, jwt_response: dict = Depe
     return project
   except Exception as error:
     return {"message": f"Some error has happend: {error}", "error": True}
+
+@router.delete("/")
+def deleteProjectEndpoint(enterprise_id: str, project_id: str, jwt_response: dict = Depends(jwtAccess)):
+  try:
+    user_email = jwt_response["data"]["email"]
+    enterprise_id = uuid.UUID(enterprise_id)
+    project_id = uuid.UUID(project_id)
+    projects = deleteProject(enterprise_id=enterprise_id, user_email = user_email, project_id = project_id)
+    return projects
+  except Exception as error:
+    return { "message": f"Some error has happend: {error}", "error": True}

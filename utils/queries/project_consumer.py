@@ -94,3 +94,31 @@ def getProjects(user_email="", enterprise_id: uuid.UUID = uuid.uuid4(), user: Us
 
   except Exception as error:
     return {"message": f"Some error has happend: {error}", "error": True}
+
+def deleteProject(
+  user_email="",
+  enterprise_id: uuid.UUID = uuid.uuid4(),
+  project_id: uuid.UUID = uuid.uuid4(),
+  user: UserModel = None,
+  enterprise: EnterpriseModel = None
+):
+  try:
+    if not user: user = getUser(user_email)
+    if not enterprise:
+      enterprise = getEnterpriseModel(user=user, enterprise_id=enterprise_id)
+      if enterprise["error"]: return enterprise
+      enterprise = enterprise["message"]
+
+    if enterprise_id in user.enterprises: 
+      if project_id in enterprise.projects:
+        project = ProjectModel.objects.filter(id = project_id).delete()
+        project.save()
+
+        enterprise.projects.remove(project_id)
+        enterprise.save()
+        return {"message": "Project deleted correctly", "error": False, "data": None}
+      return {"message": "Unable to find this project in your profile", "error": True, "data": None}
+    return {"message": "Unable to find this enterprise in your profile", "error": True, "data": None}
+  except Exception as error:
+    print(f"Some error has happend deleting project at project_consumer.py. error: {error}")
+    return {"message": f"Some error has happend: {error}", "error": True}
