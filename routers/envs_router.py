@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from dependencies.jwt_dependencies import jwtAccess
-from utils.queries.env_consumer import createEnv, getEnv, getEnvs
+from utils.queries.env_consumer import createEnv, getEnv, getEnvs, deleteEnv
+from utils.queries.key_consumer import createKey
 import uuid
 
 router = APIRouter()
@@ -44,3 +45,25 @@ def getOneEnv(enterprise_id: str, project_id: str, env_id: str, jwt_response: di
     return project
   except Exception as error:
     return {"message": f"Some error has happend: {error}", "error": True}
+
+@router.delete("")
+def deleteProjectEndpoint(
+  enterprise_id: str,
+  project_id: str,
+  env_id: str,
+  jwt_response: dict = Depends(jwtAccess)
+):
+  try:
+    user_email = jwt_response["data"]["email"]
+    enterprise_id = uuid.UUID(enterprise_id)
+    project_id = uuid.UUID(project_id)
+    env_id = uuid.UUID(env_id)
+    projects = deleteEnv(
+      user_email = user_email,
+      enterprise_id=enterprise_id,
+      project_id = project_id,
+      env_id = env_id,
+    )
+    return projects
+  except Exception as error:
+    return { "message": f"Some error has happend: {error}", "error": True}
