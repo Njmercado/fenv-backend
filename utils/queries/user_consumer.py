@@ -63,6 +63,16 @@ def createUser(params):
     }
   return { "message": "User created successfully", "error": False, "data": None } 
 
+def changeEmail(old_user_email: str, new_user_email: str):
+  try:
+    user = getUser(old_user_email)
+    user.email = new_user_email
+    user.save()
+    return {"message": "Email changed correctly", "error": False, "data": None}
+  except Exception as error:
+    print(f"Some has happend changing user email at user_consumer.py. error: {error}")
+    return {"message": f"Some error has happend: {error}", "error": True, "data": None}
+
 def changePassword(user_email: str, new_password: str):
   try:
     user = getUser(user_email)
