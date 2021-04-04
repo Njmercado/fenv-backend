@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, status
-from routers import login_router, signup_router, enterprises_router, project_router, envs_router, keys_router
+from routers import login_router, signup_router, enterprises_router, project_router, envs_router, keys_router, user_router
 from utils.jwt_utils import verifyJWT
 from dependencies import jwt_dependencies
 
@@ -39,4 +39,10 @@ app.include_router(
   signup_router.router,
   prefix="/signup",
   tags=["signup"]
+)
+
+app.include_router(
+  user_router.router,
+  prefix="/user",
+  tags=["user"]
 )
