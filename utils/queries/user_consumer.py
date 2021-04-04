@@ -18,7 +18,6 @@ def __cipherData(data):
   final_data = cipher.appendNonceToData(crypted_data, nonce)
   return final_data
 
-
 def __decipherData(data):
   data = bytes(data, encoding="utf-8")
   decoded_data = base64.b64decode(data)
@@ -47,11 +46,7 @@ def createUser(params):
   
   is_valid_password = not verifyPassword(params.password)
 
-  if is_valid_password:
-    return {
-      "message": "Wrong password, please enter a valid one",
-      "error": False
-    }
+  if is_valid_password: return { "message": "Wrong password, please enter a valid one", "error": True, "data": None }
 
   if not userExists(params.email):
     ciphered_password = __cipherData(params.password)
@@ -64,9 +59,21 @@ def createUser(params):
   else:
     return {
       "message": "This user already exist, plis try to recover your password if you dont remember it",
-      "error": False
+      "error": True
     }
-  return {
-    "message": "User created successfully",
-    "error": False
-  } 
+  return { "message": "User created successfully", "error": False, "data": None } 
+
+def changePassword(user_email: str, new_password: str):
+  try:
+    user = getUser(user_email)
+
+    is_valid_password = verifyPassword(new_password)
+    if not is_valid_password: return { "message": "Wrong password, please enter a valid one", "error": True, "data": None} 
+
+    ciphered_new_password = __cipherData(new_password)
+    user.password = ciphered_new_password
+    user.save()
+    return {"message": "password changed correctly", "error": False, "data": None}
+  except Exception as error:
+    print(f"Some has happend changing user password in user_consumer.py. error: {error}")
+    return {"message": f"Some error has happend: {error}", "error": True, "data": None}
